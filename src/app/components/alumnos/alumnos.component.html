@@ -1,1 +1,115 @@
-<p>alumnos works!</p>
+<div class="row">
+  <div class="col-12">
+    <p-panel>
+      <p-header style="text-align: center;">
+        <h1>{{ titulo }}</h1>
+      </p-header>
+      <p-menubar [model]="items"></p-menubar>
+      <p-table [columns]="cols" [value]="alumnos">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns">
+              {{ col.header }}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-alumno let-columns="columns">
+          <tr>
+            <td>{{ alumno.idAlumnos }}</td>
+            <td>{{ alumno.nombre }}</td>
+            <td>{{ alumno.apellido }}</td>
+            <td>{{ alumno.createAt | date: "long" }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+</div>
+
+<p-dialog [(visible)]="displayModal" [modal]="true" >
+  <p-header>
+    <b>Agregar Alumno</b>
+  </p-header>
+  <form [formGroup]="alumnoForm" (ngSubmit)="onGuardar()">
+    <p-panel>
+      <div class="p-fluid forms-grid" style="margin: 1em 0;">
+        <div>
+          <div>ID Alumno</div>
+          <input pInputText type="text" formControlName="idAlumnos"/>
+        </div>
+        <div>
+          <div>Nombre *</div>
+          <input
+            pInputText
+            type="text"
+            formControlName="nombre"
+            placeholder="Requerido"
+          />
+          <p-message
+            severity="error"
+            text="El Campo Nombre Es Requerido"
+            *ngIf="
+              !alumnoForm.controls['nombre'].valid &&
+              alumnoForm.controls['nombre'].dirty
+            "
+          ></p-message>
+        </div>
+        <div>
+          <div>Apellido *</div>
+          <input
+            pInputText
+            type="text"
+            formControlName="apellido"
+            placeholder="Requerido"
+          />
+          <p-message
+            severity="error"
+            text="El Campo Apellido Es Requerido"
+            *ngIf="
+              !alumnoForm.controls['apellido'].valid &&
+              alumnoForm.controls['apellido'].dirty
+            "
+          ></p-message>
+        </div>
+        <div>
+          <div>Email *</div>
+          <input
+            pInputText
+            type="email"
+            formControlName="email"
+            placeholder="Requerido"
+          />
+          <p-message
+            severity="error"
+            [text]="
+              alumnoForm.controls['email'].errors['required'] ? 'El Campo Email Es Requerido' :
+              alumnoForm.controls['email'].errors['email'] ? 'Ingrese un Email valido' : 'el campo es invalido'
+            "
+            *ngIf="
+              !alumnoForm.controls['email'].valid &&
+              alumnoForm.controls['email'].dirty
+            "
+          ></p-message>
+        </div>
+      </div>
+    </p-panel>
+  </form>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      (click)="displayModal = false; onGuardar()"
+      label="Aceptar"
+      [disabled]="!alumnoForm.valid"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      (click)="displayModal = false; alumnoForm.reset()"
+      label="Cancelar"
+      class="ui-button-secondary"
+    ></button>
+  </p-footer>
+</p-dialog>

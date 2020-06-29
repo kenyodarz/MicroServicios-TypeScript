@@ -1,0 +1,23 @@
+:host ::ng-deep button {
+  margin-right: 0.25em;
+}
+:host ::ng-deep .ui-splitbutton {
+  margin-left: 0.25em;
+}
+:host ::ng-deep .ui-splitbutton button {
+  margin-right: 0;
+}
+span {
+  color: #fff;
+  margin-right: 0.25em;
+  margin-left: 0.25em;
+}
+:host ::ng-deep .ui-button {
+  margin: 0.5em 0.5em 0.5em 0;
+  width: 140px;
+}
+@media screen and (max-width: 40em) {
+  :host ::ng-deep .ui-dialog {
+    width: 75vw !important;
+  }
+}

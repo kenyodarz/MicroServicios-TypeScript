@@ -6,6 +6,7 @@
 */
 {
   "files": [],
+  "exclude": ["node_modules"],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -16,5 +17,5 @@
     {
       "path": "./e2e/tsconfig.json"
     }
-]
+  ]
 }
