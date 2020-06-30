@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { MenubarModule } from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
 
 const myModule = [
   ToolbarModule,
@@ -24,6 +25,7 @@ const myModule = [
   MenubarModule,
   ToastModule,
   DialogModule,
+  PaginatorModule,
 ];
 
 

@@ -11,6 +11,9 @@
         selectionMode="single"
         [(selection)]="selectedAlumno"
         dataKey="idAlumnos"
+        [paginator]="true"
+        [rows]=10
+        [rowsPerPageOptions]="[10,20,30,40,50]"
       >
         <ng-template pTemplate="header" let-columns>
           <tr>

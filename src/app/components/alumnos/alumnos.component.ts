@@ -4,7 +4,7 @@ import { Validators, FormControl } from '@angular/forms';
 import { FormGroup, FormBuilder } from '@angular/forms';
 // Services
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AlumnoService } from 'src/app/service/alumno.service';
+import { AlumnoService } from 'src/app/services/alumno.service';
 // Models
 import { Alumno } from 'src/app/models/alumno';
 // Utils
