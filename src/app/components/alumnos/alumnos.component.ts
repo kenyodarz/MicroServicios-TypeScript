@@ -18,6 +18,7 @@ import { MenuItem } from 'primeng/api';
 export class AlumnosComponent implements OnInit {
   alumnos: Alumno[];
   alumno: Alumno;
+  selectedAlumno: Alumno;
   items: MenuItem[];
   cols: any[];
   displayModal: boolean;
@@ -80,13 +81,31 @@ export class AlumnosComponent implements OnInit {
     let index = this.alumnos.findIndex((e) => e.idAlumnos === result.idAlumnos);
     if (index != -1) {
       this.alumnos[index] = result;
-    }else {
-      this.alumnos.push(result)
+    } else {
+      this.alumnos.push(result);
     }
     this.alumnoForm.reset();
   }
 
-  mostrarDialogoGuardar() {
+  mostrarDialogoGuardar(editar: boolean) {
+    this.alumnoForm.reset();
+    if (editar) {
+      if (
+        this.selectedAlumno !== null &&
+        this.selectedAlumno.idAlumnos !== null
+      ) {
+        this.alumnoForm.patchValue(this.selectedAlumno);
+      } else {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '¡¡¡Advertencia!!!',
+          detail: 'Debe seleccionar un Alumno',
+        });
+        return;
+      }
+    } else {
+      this.alumno = new Alumno();
+    }
     this.displayModal = true;
   }
 
@@ -96,20 +115,57 @@ export class AlumnosComponent implements OnInit {
     this.guardarAlumno();
   }
 
+  eliminar() {
+    if (
+      this.selectedAlumno === null ||
+      this.selectedAlumno.idAlumnos === null
+    ) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: '¡¡¡Advertencia!!!',
+        detail: 'Debe seleccionar un Alumno',
+      });
+      return;
+    }
+    this.confirmationService.confirm({
+      message: '¿Está seguro que desea eliminar el Alumno?',
+      accept: () => {
+        this.alumnoService
+          .delete(this.selectedAlumno.idAlumnos)
+          .subscribe((result: Alumno) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: '¡Correcto!',
+              detail:
+                'El alumno: ' +
+                result.idAlumnos +
+                ' ha sido eliminado correctamente',
+            });
+            this.eliminarAlumno(result.idAlumnos);
+          });
+      },
+    });
+  }
+  eliminarAlumno(idAlumnos: number) {
+    let index = this.alumnos.findIndex((e) => e.idAlumnos === idAlumnos);
+    if (index != -1) {
+      this.alumnos.splice(index, 1);
+    }
+  }
+
   ngOnInit(): void {
     this.obtenerAlumnos();
     this.alumnoForm = this.formBulder.group({
-      idAlumnos: new FormControl(
-        { value: null, disabled: true },
-        Validators.required
-      ),
+      idAlumnos: new FormControl(),
       nombre: new FormControl(null, Validators.required),
       apellido: new FormControl(null, Validators.required),
       email: new FormControl(
         null,
         Validators.compose([Validators.required, Validators.email])
       ),
+      createAt: new FormControl(),
     });
+    this.selectedAlumno = null;
     this.cols = [
       { field: 'idAlumnos', header: 'ID' },
       { field: 'nombre', header: 'NOMBRE' },
@@ -120,19 +176,22 @@ export class AlumnosComponent implements OnInit {
       {
         label: 'Nuevo',
         icon: 'pi pi-fw pi-plus',
-        command: () => this.mostrarDialogoGuardar(),
+        command: () => this.mostrarDialogoGuardar(false),
       },
       {
         label: 'Editar',
         icon: 'pi pi-fw pi-pencil',
+        command: () => this.mostrarDialogoGuardar(true),
       },
       {
         label: 'Borrar',
         icon: 'pi pi-fw pi-trash',
+        command: () => this.eliminar(),
       },
       {
         label: 'Actualizar',
         icon: 'pi pi-fw pi-refresh',
+        command: () => this.obtenerAlumnos(),
       },
     ];
   }
